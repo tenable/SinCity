@@ -1,0 +1,24 @@
+---
+- name: Setup common deps
+  hosts: all
+  roles:
+    - common_deps
+    - update-hostnames
+
+- import_playbook: ad-servers.yml
+  tags: setup-ad
+
+- import_playbook: ad-trusts.yml
+  tags: setup-ad-trusts
+
+- import_playbook: join-to-domains.yml
+  tags: join-to-domains
+
+- import_playbook: adfs.yaml
+  tags: setup-adfs
+
+- import_playbook: servers.yml
+  tags: setup-servers
+
+- import_playbook: workstations.yml
+  tags: setup-workstations

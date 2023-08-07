@@ -1,0 +1,23 @@
+{
+  "Scenario Doc": {
+    "prefix": "scenario-doc",
+    "body": [
+      "# $1 Scenario",
+      "",
+      "**Tags:** $2",
+      "",
+      "## Description",
+      "",
+      "$3",
+      "",
+      "## Implementation",
+      "",
+      "This scenario will $4.",
+      "",
+      "References:",
+      "",
+      "- $5"
+    ],
+    "description": "Generate a markdown file for sincity scenario"
+  }
+}

@@ -1,0 +1,11 @@
+hosts:
+  '{{ main_workstation.key }}':
+    registry:
+      'HKLM:\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell':
+        name: ExecutionPolicy
+        data: AllSigned
+        type: string
+
+tags:
+  - T1059.001
+  - T1546.013

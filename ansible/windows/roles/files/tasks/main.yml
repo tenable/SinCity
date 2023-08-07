@@ -1,0 +1,9 @@
+---
+- name: Ensure files state
+  ansible.windows.win_file:
+    path: '{{ item.key }}'
+    state: '{{ item.state | default("file") }}'
+  vars:
+    files: '{{hosts[inventory_hostname].files | default({})}}'
+  loop: '{{ files|dict2items }}'
+  when: files is defined

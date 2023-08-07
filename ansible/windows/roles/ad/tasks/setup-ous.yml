@@ -1,0 +1,7 @@
+---
+- name: Ensure domain OU exists
+  community.windows.win_domain_ou:
+    name: '{{ item.key }}'
+    path: '{{ item.value.path }}'
+    state: present
+  with_dict: "{{ domain_info.ous }}"

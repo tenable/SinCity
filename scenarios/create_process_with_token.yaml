@@ -1,0 +1,19 @@
+hosts:
+  '{{ main_workstation.key }}':
+    groups:
+      Administrators:
+        members:
+        - indiana_jones
+    process_runner:
+      dummy_process.bat:
+        command: start dummy_process.bat
+        runas:
+          password: ff8a3S%1S1
+          username: indiana_jones
+    users:
+      indiana_jones:
+        description: This is a user for Create Process WIth Token scenarion
+        password: ff8a3S%1S1
+tags:
+- T1134.002
+- T1134.001

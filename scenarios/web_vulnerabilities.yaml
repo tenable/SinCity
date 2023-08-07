@@ -1,0 +1,24 @@
+hosts:
+  web01:
+    ip: 10.0.100.31
+    name: web01
+    role: linux_web_server
+    subnet: basin
+    type: linux
+    requirements:
+      - docker-compose
+    docker_compose_apps:
+      vulnerable_web_app:
+        url: '{{ assets.vulnerable_web_app.url }}'
+        target_path: '{{ assets.vulnerable_web_app.target_path }}'
+tags:
+  - WAS.98120
+  - WAS.98121
+  - WAS.98123
+  - WAS.113212
+  - WAS.98623
+  - WAS.113162
+  - WAS.98115
+  - WAS.113069
+  - WAS.98113
+  - WAS.98114

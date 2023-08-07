@@ -1,0 +1,103 @@
+---
+keypair:
+  name: '{{ assets.variables.keypair.name }}'
+  public_key: '{{ assets.variables.keypair.public_key }}'
+server_roles:
+  dc:
+    instance_type: t2.medium
+    providers:
+      # {% if config.provider == 'aws' %}
+      aws:
+        image: "{{ assets.providers['aws'].ami[config.region].win_2019_image | default('') }}"
+      # {% endif %}
+      azure:
+        publisher: 'MicrosoftWindowsServer'
+        offer: 'WindowsServer'
+        sku: '2019-Datacenter'
+        version: 'latest'
+
+  mssql:
+    instance_type: t2.small
+    providers:
+      # {% if config.provider == 'aws' %}
+      aws:
+        image: "{{ assets.providers['aws'].ami[config.region].win_2019_image | default('') }}"
+      # {% endif %}
+      azure:
+        publisher: 'MicrosoftWindowsServer'
+        offer: 'WindowsServer'
+        sku: '2019-Datacenter'
+        version: 'latest'
+
+  workstation:
+    instance_type: t2.small
+    providers:
+      # {% if config.provider == 'aws' %}
+      aws:
+        image: "{{ assets.providers['aws'].ami[config.region].win_2019_image | default('') }}"
+      # {% endif %}
+      azure:
+        publisher: 'MicrosoftWindowsServer'
+        offer: 'WindowsServer'
+        sku: '2019-Datacenter'
+        version: 'latest'
+
+  winserver:
+    instance_type: t2.small
+    providers:
+      # {% if config.provider == 'aws' %}
+      aws:
+        image: "{{ assets.providers['aws'].ami[config.region].win_2019_image | default('') }}"
+      # {% endif %}
+      azure:
+        publisher: 'MicrosoftWindowsServer'
+        offer: 'WindowsServer'
+        sku: '2019-Datacenter'
+        version: 'latest'
+
+  adfs:
+    instance_type: t2.small
+    providers:
+      # {% if config.provider == 'aws' %}
+      aws:
+        image: "{{ assets.providers['aws'].ami[config.region].win_2019_image | default('') }}"
+      # {% endif %}
+      azure:
+        publisher: 'MicrosoftWindowsServer'
+        offer: 'WindowsServer'
+        sku: '2019-Datacenter'
+        version: 'latest'
+
+  linux_web_server:
+    instance_type: t2.small
+    providers:
+      # {% if config.provider == 'aws' %}
+      aws:
+        image: "{{ assets.providers['aws'].ami[config.region].centos7 | default('') }}"
+      # {% endif %}
+      azure:
+        publisher: 'OpenLogic'
+        offer: 'CentOS'
+        sku: '7.5'
+        version: 'latest'
+
+  linux_server:
+    instance_type: t2.small
+    providers:
+      # {% if config.provider == 'aws' %}
+      aws:
+        image: "{{ assets.providers['aws'].ami[config.region].centos7 | default('') }}"
+      # {% endif %}
+      azure:
+        publisher: 'OpenLogic'
+        offer: 'CentOS'
+        sku: '7.5'
+        version: 'latest'
+
+cloud:
+  aws:
+    vpc_cidr_block: 10.0.0.0/16
+
+  azure:
+    virtual_network_address_space: 10.0.0.0/16
+    resource_group: sincity-{{ assets.variables.main_sid }}

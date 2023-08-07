@@ -1,0 +1,14 @@
+---
+- import_playbook: network_data.yml
+  tags: always
+
+- name: Ensure all workstations\servers are connected to their domains
+  hosts: workstation_servers, mssql_servers, web_servers, adfs_servers, winserver_servers
+  roles:
+    - set-dns-records
+    - member-of-domain
+  vars:
+    domain_info: '{{ network.domains[network.hosts[inventory_hostname].domain] }}'
+    dns_records:
+      - '{{ network.subnets[network.hosts[inventory_hostname].domain.split(".")[0]].dc }}'  # Get only the first part of the domain as it represents the subnet
+      - 8.8.8.8 # If the records are not found in the DC, use Google DNS

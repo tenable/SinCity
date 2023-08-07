@@ -1,0 +1,14 @@
+---
+# tasks file for playbooks/roles/vulnerable-web-app
+- name: Clone repository
+  git:
+    repo: https://github.com/shy2net/vulnerable-php-web-app.git
+    dest: '{{ app_path }}'
+
+- name: Start app
+  vars:
+    ansible_python_interpreter: python3
+  docker_compose:
+    project_src: '{{ app_path }}'
+  retries: 5
+  delay: 15

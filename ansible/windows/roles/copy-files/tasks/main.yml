@@ -1,0 +1,9 @@
+---
+- name: Copy file into machine
+  ansible.windows.win_copy:
+    src: '{{ item.key }}'
+    dest: '{{ item.value }}'
+  vars:
+    files: '{{hosts[inventory_hostname].copy_files | default({})}}'
+  loop: '{{ files|dict2items }}'
+  when: files is defined

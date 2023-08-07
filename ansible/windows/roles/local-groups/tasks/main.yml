@@ -1,0 +1,20 @@
+- block:
+    - name: Ensure local groups exist
+      ansible.windows.win_group:
+        name: '{{ item.key }}'
+        description: '{{ item.value.description if "description" in item.value else None }}'
+        state: present
+      when: item.key != 'Administrators' and item.key != 'Administrator'
+      loop: '{{ win_groups|dict2items }}'
+
+    - name: Ensure members are attached to local groups
+      ansible.windows.win_group_membership:
+        name: '{{ item.key }}'
+        members: '{{ item.value.members }}'
+        state: present
+      when: item.value.members is defined
+      loop: '{{ win_groups|dict2items }}'
+
+  vars:
+    win_groups: '{{hosts[inventory_hostname].groups | default({})}}'
+  when: win_groups is defined

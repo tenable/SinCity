@@ -1,0 +1,12 @@
+{
+    "hosts": {
+        "{{ main_workstation.key }}": {
+            "groups": {
+                "Remote Management Users": {
+                    "members": ["{{ main_user.key }}"]
+                }
+            }
+        }
+    },
+    "tags": ["T1021.006"]
+}

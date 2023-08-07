@@ -1,0 +1,6 @@
+security_group: 'sg-0a9779bd5c36ad457'
+centos_ami: 'ami-02358d9f5245918a3'
+subnet_id: 'subnet-00de337e852f9b61f'
+vpc_id: 'vpc-0db62e277b8ecf3de'
+region: 'us-east-1'
+apps_dir: '/apps'

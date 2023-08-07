@@ -1,0 +1,13 @@
+cloud:
+  aws:
+    s3:
+      '{{ assets.providers.aws.s3.readonly_facing_bucket }}':
+        policies:
+          allow_world_readonly_policy_document:
+            actions:
+            - s3:GetObject
+            - s3:ListBucket
+            principals:
+              identifiers:
+              - '*'
+              type: '*'

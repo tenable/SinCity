@@ -1,0 +1,24 @@
+hosts:
+# {% for item in groups.web_server %}
+  '{{ item.key }}':
+    instance_role: s3_read_role
+# {% endfor %}
+
+
+policies:
+  access_s3_policy:
+    description: Gives access to S3 storage
+    allowed_actions:
+      - name: s3:*
+        resources:
+          - '*'
+
+roles:
+  s3_read_role:
+    assume_role_policy:
+      allowed_actions:
+        - name: sts:AssumeRole
+          principal:
+            Service: 'ec2.amazonaws.com'
+    policies:
+      - access_s3_policy

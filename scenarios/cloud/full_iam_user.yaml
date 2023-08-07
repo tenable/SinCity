@@ -1,0 +1,12 @@
+cloud:
+  policies:
+    allow_all:
+      description: Give access to all
+      allowed_actions:
+        - name: '*'
+          resources:
+            - '*'
+  users:
+    '{{ assets.providers.aws.iam.sincity_admin }}':
+      policies:
+        - allow_all

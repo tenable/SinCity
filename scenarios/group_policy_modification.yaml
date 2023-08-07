@@ -1,0 +1,15 @@
+domains:
+  '{{ main_domain.key }}':
+    gpos:
+      vul_gpo_modifications:
+        name: VulGPOModifications
+        permissions:
+          '{{ main_user.key }}':
+            level: GpoEdit
+            type: User
+        target: OU=Groups,DC=basin,DC=local
+    ous:
+      Groups:
+        path: DC=basin,DC=local
+tags:
+- T1484.001

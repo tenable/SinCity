@@ -1,0 +1,19 @@
+---
+# This is the main playbook for the ldaps-setup role
+
+- name: Ensure LDAPS
+  ansible.windows.win_powershell:
+    script: |
+      $caRole = Get-WindowsFeature Adcs-Cert-Authority
+      if ($caRole.Installed -eq $false) {
+        Install-WindowsFeature Adcs-Cert-Authority
+        Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -ValidityPeriod Years -ValidityPeriodUnits 10
+      }
+      else {
+        $Ansible.Changed = $false
+      }
+  become: yes
+  become_method: runas
+  become_user: '{{ domain_info.domain_admin.username }}'
+  vars:
+    ansible_become_pass: '{{ domain_info.domain_admin.password }}'

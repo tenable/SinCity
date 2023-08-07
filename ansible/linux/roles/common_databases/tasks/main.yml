@@ -1,0 +1,55 @@
+---
+# tasks file for playbooks/roles/common_databases
+- include_vars: ../vars/research.yml
+
+- name: Create app directory if not exists
+  file:
+    path: '{{ app_path }}'
+    state: directory
+    owner: '{{ ansible_user_id }}'
+  become: yes
+
+- name: Copy docker-compose YAML file
+  copy:
+    src: docker-compose.yml
+    dest: '{{ app_path }}/docker-compose.yml'
+
+- name: Copy shared directory
+  copy:
+    src: shared
+    dest: '{{ app_path }}'
+    force: true
+
+- name: Copy create mock data script
+  copy:
+    src: create_mock_data.sh
+    dest: '{{ app_path }}/create_mock_data.sh'
+    force: true
+
+- name: Start databases
+  vars:
+    ansible_python_interpreter: python3
+  docker_compose:
+    project_src: '{{ app_path }}'
+
+- name: Wait 60 seconds for databases to load up
+  pause:
+    seconds: 60
+
+
+- name: Install required pip dependencies
+  pip:
+    executable: /usr/local/bin/pip3.7
+    name:
+      - csvkit
+      - mysql-connector-python
+      - pg8000
+      - pymssql
+    state: present
+  become: yes
+
+
+- name: Create mock data
+  shell:
+    cmd: chmod +x ./create_mock_data.sh && ./create_mock_data.sh
+    chdir: '{{ app_path }}'

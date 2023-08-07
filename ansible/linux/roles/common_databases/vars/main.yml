@@ -1,0 +1,4 @@
+---
+# vars file for playbooks/roles/common_databases
+include_vars: ../vars/research.yml
+app_path: '{{ apps_dir }}/common_databases'

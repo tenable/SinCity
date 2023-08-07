@@ -1,0 +1,10 @@
+hosts:
+  '{{ main_workstation.key }}':
+    registry_keys:
+      'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa':
+        name: scheduled_task_force_authenticated_account
+        data: 1
+        type: dword
+
+tags:
+  - T1059.005

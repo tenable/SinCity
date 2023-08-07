@@ -1,0 +1,3 @@
+cloud:
+  users:
+  '{{ assets.providers.aws.iam.sincity_simple_user }}': {}

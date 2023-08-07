@@ -1,0 +1,192 @@
+{
+    "network": {
+        "keypair": {
+            "name": "sincity_ssh_key",
+            "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCm0edODZ7ou4xhOr3zGl7uXJ+1PEvOdfeEwR68UiEwO7QQRaI92mjUtQq7qYpMBV+Vmn3tWxC8K6Z7DtC+407LD6t2fWIqjMkFo9/C8NDaramo9PGA3Q8ZTAbfG12/3GMoxKreqvNHR1tSXlquAnnLJCCU1m/t6rBSL7Y/y+dVRPu5ZqF35NBvMOro0UzXvV+0jeCy6K+QkF/AkDfLBvf2RBMe+KyxkudHWm9dr3gevx5bSCdRyhiO1ixahRL4cK8JihEekxOD3JCa+/w7SaH00b40XaZM8BcLE8UakzgcI658aMTVkOiwpMw7yjkE67Y/e77fVcb9VDKlHWQJISsgtqzrQK0l8wvBwy0W8wJWEWXCtFOgvRLEwlWBSyyMgekffc2ctUXOuWQQtgFOpMe2pqeolsApuTTolNhX1EzkNrxk1TZ+f8FLZKjC798l+XsPqs9FSwM3SHsB0EHobgDOj64AEfESVX+CHPzLL6mYF8JkueJJiIfOzTaibNv3T08= sincity"
+        },
+        "hosts": {
+            "dc01": {
+                "name": "dc01",
+                "ip": "10.0.100.11",
+                "type": "windows",
+                "role": "dc",
+                "domain": "basin.local"
+            },
+            "ws01": {
+                "name": "ws01",
+                "ip": "10.0.100.30",
+                "type": "windows",
+                "role": "workstation",
+                "domain": "basin.local",
+                "users": {
+                    "locally": {
+                        "password": "Aa123456"
+                    }
+                },
+                "files": {
+                    "SinCityLogger.exe": "C:\\Program Files"
+                },
+                "win_services": {
+                    "SinCityLogger": {
+                        "description": "Service that run under Domain Admin context",
+                        "username": "basin.local\\dwight.mccarthy",
+                        "password": "dkzs3f1A"
+                    }
+                }
+            }
+        },
+        "subnets": {
+            "basin": {
+                "address": "10.0.100.0/24",
+                "dc": "10.0.100.11"
+            },
+            "sacredoaks": {
+                "address": "10.0.120.0/24",
+                "dc": "10.0.120.11"
+            },
+            "oldtown": {
+                "address": "10.0.110.0/24",
+                "dc": "10.0.110.11"
+            }
+        },
+        "server_tcp_ports": [445, 3389, 138, 22, 5986, 5985, 3306, 8080, 8081, 5432, 22, 1433, 27017, 80],
+        "server_roles": {
+            "dc": {
+                "instance_type": "t2.medium",
+                "image": "ami-05912b6333beaa478"
+            },
+            "mssql": {
+                "instance_type": "t2.small",
+                "image": "ami-05912b6333beaa478"
+            },
+            "workstation": {
+                "instance_type": "t2.small",
+                "image": "ami-05912b6333beaa478"
+            },
+            "adfs": {
+                "instance_type": "t2.small",
+                "image": "ami-05912b6333beaa478"
+            },
+            "linux_web_server": {
+                "instance_type": "t2.small",
+                "image": "ami-02358d9f5245918a3"
+            }
+        },
+        "dcs_map": {
+            "dc01": "basin.local",
+            "dc02": "oldtown.local",
+            "dc03": "sacredoaks.local"
+        },
+        "domains": {
+            "basin.local": {
+                "netbios_name": "basin",
+                "domain_name": "basin.local",
+                "safe_mode_password": "Aa123456!",
+                "trusts": ["oldtown.local", "sacredoaks.local"],
+                "domain_admin": {
+                    "username": "Administrator",
+                    "password": "d#rfkn7dZ!"
+                },
+                "domain_users": {
+                    "dwight.mccarthy": {
+                        "firstname": "daenerys",
+                        "surname": "targaryen",
+                        "password": "dkzs3f1A",
+                        "city": "-",
+                        "description": "Janny Russell",
+                        "groups": ["Domain Admins"],
+                        "path": "CN=Builtin,DC=basin,DC=local"
+                    },
+                    "harry.potter": {
+                        "firstname": "harry",
+                        "surname": "potter",
+                        "password": "Aa123456",
+                        "city": "-",
+                        "description": "Harry Potter",
+                        "groups": ["Griffindor", "Remote Desktop Users"],
+                        "path": "CN=Builtin,DC=basin,DC=local",
+                        "notRequiresPreAuth": "true"
+                    },
+                    "ron.wisely": {
+                        "firstname": "ron",
+                        "surname": "wisely",
+                        "password": "Aa123456",
+                        "city": "-",
+                        "description": "Ron Wisely",
+                        "groups": ["Griffindor"],
+                        "path": "CN=Builtin,DC=basin,DC=local"
+                    },
+                    "sql_svc": {
+                        "firstname": "sql",
+                        "surname": "service",
+                        "password": "P@ssw0rd",
+                        "city": "-",
+                        "description": "sql service",
+                        "groups": ["Service Accounts"],
+                        "path": "CN=Users,DC=basin,DC=local",
+                        "spns": ["MSSQLSvc/mssql.basin.local:1433", "MSSQLSvc/mssql.basin.local"]
+                    }
+                },
+                "domain_groups": {
+                    "global": {
+
+                    },
+                    "universal": {},
+                    "domainlocal": {
+                        "Service Accounts": {
+                            "path": "OU=Groups,DC=basin,DC=local"
+                        },
+                        "Griffindor": {
+                            "path": "OU=Groups,DC=basin,DC=local"
+                        }
+                    }
+                },
+                "ous": {
+                    "Groups": {
+                        "path": "DC=basin,DC=local"
+                    }
+                },
+                "gpos": {
+                    "vul_gpo_modifications": {
+                        "name": "VulGPOModifications",
+                        "target": "OU=Groups,DC=basin,DC=local",
+                        "permissions": {
+                            "harry.potter": {
+                                "type": "User",
+                                "level": "GpoEdit"
+                            }
+                        }
+                    }
+                },
+                "acls": {
+                    "GenericAll_harry_potter": {
+                        "for": "harry.potter",
+                        "to": "DC=basin,DC=local",
+                        "right": "GenericAll",
+                        "inheritance": "None"
+                    }
+                }
+            },
+            "oldtown.local": {
+                "netbios_name": "oldtown",
+                "domain_name": "oldtown.local",
+                "safe_mode_password": "Aa123456!",
+                "domain_admin": {
+                    "username": "Administrator",
+                    "password": "ny%3d!+s"
+                },
+                "domain_users": {
+                    "arya.stark": {
+                        "firstname": "Arya",
+                        "surname": "Stark",
+                        "password": "Needle",
+                        "city": "Winterfell",
+                        "description": "Arya Stark",
+                        "groups": ["Stark"],
+                        "path": "CN=Users,DC=oldtown,DC=local"
+                    }
+                }
+            }
+        }
+    }
+}

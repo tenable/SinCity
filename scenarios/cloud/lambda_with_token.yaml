@@ -1,0 +1,15 @@
+cloud:
+  aws:
+    lambda:
+      '{{ assets.providers.aws.lambda.lambda_with_token}}':
+        environment:
+          variables:
+            token: mybigassnotsafepassword
+        function_name: hello_lambda
+        handler: hello_lambda.lambda_handler
+        policy: '{ "Version": "2012-10-17", "Statement": [ { "Action": "sts:AssumeRole",
+          "Principal": { "Service": "lambda.amazonaws.com" }, "Effect": "Allow", "Sid":
+          "" } ] }'
+        runtime: python3.8
+        source_file: ../../resources/terraform/hello_lambda.py
+        zip_output: ../../tmp/hello_lambda.zip

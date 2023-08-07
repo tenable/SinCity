@@ -1,0 +1,15 @@
+---
+- block:
+    - name: Ensure registry keys
+      ansible.windows.win_regedit:
+        path: '{{ item.key }}'
+        name: '{{ item.value.name }}'
+        data: '{{ item.value.data }}'
+        type: '{{ item.value.type | default(None) }}'
+        delete_key: '{{ item.value.delete_key | default("no") }}'
+      loop: '{{ registry_keys|dict2items }}'
+
+  vars:
+    host: '{{ hosts[inventory_hostname] }}'
+    registry_keys: '{{ host.registry_keys }}'
+  when: host.registry_keys is defined

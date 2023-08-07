@@ -1,0 +1,26 @@
+---
+providers:
+  aws:
+    ami:
+      us-east-2:
+        win_2019_image: ami-0aea78c3dfdcbb8cd
+        centos7: ami-033adaf0b583374d4
+      us-east-1:
+        win_2019_image: ami-0b7dd7b9e977b2b85
+        centos7: ami-002070d43b0a4f171
+      us-west-1:
+        win_2019_image: ami-0c58666f87c91c665
+        centos7: ami-0dee0f906cf114191
+    s3:
+      public_bucket_name: sincity-{{ variables.main_sid }}-s3-public-bucket
+      readonly_facing_bucket: sincity-{{ variables.main_sid }}-s3-readonly-bucket
+    iam:
+      sincity_admin: sincity_{{ variables.main_sid }}_admin
+      sincity_simple_group: sincity_{{ variables.main_sid }}_simple_group
+      sincity_simple_user: sincity_{{ variables.main_sid }}_simple_user
+    lambda:
+      lambda_with_token: lambda_{{ variables.main_sid }}_with_token
+
+vulnerable_web_app:
+  url: https://github.com/shy2net/vulnerable-php-web-app.git
+  target_path: ~/apps/vulnerable-web-app

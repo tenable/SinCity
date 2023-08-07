@@ -1,0 +1,189 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Docker Node.js Launch",
+      "type": "docker",
+      "request": "launch",
+      "preLaunchTask": "docker-run: debug",
+      "platform": "node",
+      "node": {
+        "package": "${workspaceFolder}/docker_app/package.json",
+        "localRoot": "${workspaceFolder}/docker_app"
+      }
+    },
+    {
+      "name": "SinCity Setup",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["setup", "aws", "--region=us-west-1", "--fresh"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Setup with S3 state backend",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": [
+        "setup",
+        "aws",
+        "--region=us-east-1",
+        "--fresh",
+        "--state-backend=s3",
+        "--state-backend-name=sincity-state",
+        "--create-state-backend"
+      ],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Apply",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["apply"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Sync Inventory",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["sync", "inventory"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Destroy",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["destroy"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Build Locals",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["build"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Build Locals With Techniques",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["build", "--scenarios=T1021.001"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Build Locals With Topology",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["build", "--topologies=test"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Build Locals With Topology and Scenario",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["build", "--topologies=test", "--scenarios=attach_webapp"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Build Locals With All Techniques",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["build", "--topologies=small", "--scenarios=all"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Generate SSH Keys",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["generate", "keys"],
+      "justMyCode": true
+    },
+    {
+      "name": "Print Supported SinCity Techniques",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["print", "techniques"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Compose",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["compose"],
+      "justMyCode": true
+    },
+    {
+      "name": "SinCity Compose with Topology",
+      "type": "python",
+      "request": "launch",
+      "module": "cli",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": ["compose", "--topology=capital_one"],
+      "justMyCode": true
+    },
+    {
+      "name": "Generate Inventory from AWS",
+      "type": "python",
+      "request": "launch",
+      "module": "aws.generate_ansible_inventory",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": [],
+      "justMyCode": true
+    },
+    {
+      "name": "Generate Local Inventory",
+      "type": "python",
+      "request": "launch",
+      "module": "build_local_inventory",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": [],
+      "justMyCode": true
+    },
+    {
+      "name": "Generate Locals",
+      "type": "python",
+      "request": "launch",
+      "module": "build_locals",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": [],
+      "justMyCode": true
+    },
+    {
+      "name": "Generate Templates",
+      "type": "python",
+      "request": "launch",
+      "module": "templating",
+      "cwd": "${workspaceFolder}/tools/python/src",
+      "args": [],
+      "justMyCode": true
+    }
+  ]
+}

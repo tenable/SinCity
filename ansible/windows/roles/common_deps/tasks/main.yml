@@ -1,0 +1,3 @@
+---
+- include_tasks: chocolatey.yml
+  tags: install_apps

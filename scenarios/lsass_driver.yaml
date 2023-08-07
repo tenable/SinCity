@@ -1,0 +1,16 @@
+---
+hosts:
+  '{{ main_workstation.key }}':
+    registry_keys:
+      'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa':
+        name: RunAsPPL
+        data: 1
+        type: dword
+
+    'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa':
+      name: LsaCfgFlags
+      data: 1
+      type: dword
+
+tags:
+  - T1547.002

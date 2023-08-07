@@ -1,0 +1,10 @@
+hosts:
+  '{{ main_workstation.key }}':
+    groups:
+      Howard Guys:
+        members:
+          - alex_george
+    users:
+      alex_george:
+        description: Just a regular user
+        password: zs@dkf13@

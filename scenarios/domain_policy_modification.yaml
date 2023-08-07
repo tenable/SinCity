@@ -1,0 +1,20 @@
+domains:
+  '{{ main_domain.key }}':
+    domain_users:
+      jorli_manic:
+        firstname: jorli
+        surname: manic
+        description: This is a simple user
+        password: ddf8@sa%2
+        city: '-'
+        path: 'CN=Builtin,{{ main_domain.domain_name | to_ldap_path}}'
+
+    acls:
+      GenericAll_{{ main_user.key }}_to_jorli_manic:
+        for: '{{ main_user.key }}'
+        inheritance: None
+        right: GenericAll
+        to: 'jorli_manic'
+
+tags:
+  - T1484

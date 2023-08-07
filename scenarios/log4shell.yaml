@@ -1,0 +1,7 @@
+hosts:
+  log4shell:
+    ip: 10.0.100.32
+    name: log4shell
+    role: linux_web_server
+    subnet: basin
+    type: linux

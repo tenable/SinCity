@@ -1,0 +1,11 @@
+---
+- name: Setup hostnames
+  win_hostname:
+    name: '{{ inventory_hostname }}'
+  register: res
+
+- name: Reboot
+  win_reboot:
+    reboot_timeout: 600
+    post_reboot_delay: 100
+  when: res.reboot_required

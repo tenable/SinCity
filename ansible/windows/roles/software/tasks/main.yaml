@@ -1,0 +1,26 @@
+---
+- block:
+  - name: Ensure chocolatey is installed
+    win_chocolatey:
+      name:
+      - chocolatey
+      - chocolatey-core.extension
+      state: present
+
+  - name: Disable enhanced exit codes
+    win_chocolatey_feature:
+      name: useEnhancedExitCodes
+      state: disabled
+
+  - name: Ensure software is installed
+    win_chocolatey:
+      name: '{{ item }}'
+      state: present
+    with_items: '{{ software }}'
+    ignore_errors: yes
+
+    vars:
+      host: '{{ hosts[inventory_hostname] }}'
+      software: '{{ host.software }}'
+    when: host.software is defined
+    tags: software

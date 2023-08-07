@@ -1,0 +1,16 @@
+hosts:
+  '{{ main_workstation.key }}':
+    copy_files:
+      SinCityLogger.exe: C:\Program Files
+    win_acls:
+      full_permissions_on_service:
+        path: HKLM:\SYSTEM\CurrentControlSet\Services\SinCityLoggerRegWeak
+        rights: FullControl
+        type: allow
+        username: '{{ main_user.key }}'
+    win_services:
+      SinCityLoggerRegWeak:
+        binpath: C:\Program Files\SinCityLogger.exe
+        description: Service that has full permissions with registry weakness
+tags:
+- T1574.011

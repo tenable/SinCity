@@ -1,0 +1,11 @@
+---
+- import_playbook: network_data.yml
+  tags: always
+
+- hosts: ws01
+  roles:
+    - windows-services
+    - windows-acl
+  vars:
+    hosts: '{{ network.hosts }}'
+

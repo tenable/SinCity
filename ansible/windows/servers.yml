@@ -1,0 +1,28 @@
+---
+- import_playbook: network_data.yml
+  tags: always
+
+- name: Install IIS
+  hosts: web_servers
+  roles:
+    - { role: 'iis', tags: 'iis' }
+
+# TODO: Server installation is not working, seems like account privilege issues
+- name: Install MSSQL Express
+  hosts: mssql_servers
+  roles:
+    - { role: 'mssql', tags: 'mssql' }
+    # - { role: 'mssql_link', tags: 'mssql' }
+  vars:
+    domain: '{{ network.hosts[inventory_hostname].domain }}'
+    SQLSVCACCOUNT_NAME: '{{network.hosts[inventory_hostname].services.mssql.svcaccount}}'
+    SQLSVCACCOUNT: "{{network.hosts[inventory_hostname].domain}}\\{{SQLSVCACCOUNT_NAME}}"
+    SQLSVCPASSWORD: '{{network.domains[network.hosts[inventory_hostname].domain].domain_users[SQLSVCACCOUNT_NAME].password}}'
+    SQLYSADMIN: '{{SQLSVCACCOUNT}}'
+    domain_admin: '{{network.hosts[inventory_hostname].domain}}\\{{network.domains[network.hosts[inventory_hostname].domain].domain_admin.username}}'
+    domain_admin_password: '{{network.domains[network.hosts[inventory_hostname].domain].domain_admin.password}}'
+    sql_sysadmins: '{{network.hosts[inventory_hostname].services.mssql.sysadmins}}'
+    executeaslogin: '{{network.hosts[inventory_hostname].services.mssql.executeaslogin}}'
+    executeasuser: '{{network.hosts[inventory_hostname].services.mssql.executeasuser}}'
+    sa_password: '{{network.hosts[inventory_hostname].services.mssql.sa_password}}'
+    linked_servers: '{{network.hosts[inventory_hostname].services.mssql.linked_servers}}'

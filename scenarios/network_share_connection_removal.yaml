@@ -1,0 +1,4 @@
+use_actions:
+  - create_local_admin_group
+tags:
+  - T1070.005

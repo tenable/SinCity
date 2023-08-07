@@ -1,0 +1,6 @@
+hosts:
+  '{{ main_workstation.key }}':
+    process_runner:
+      dummy_unsecured_connection.ps1: {}
+tags:
+- T1048.003

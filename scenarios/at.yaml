@@ -1,0 +1,13 @@
+hosts:
+  '{{ main_workstation.key }}':
+    scheduled_tasks:
+      echo_hello:
+        description: Say hello!
+        actions:
+          - path: cmd.exe
+            arguments: /c "echo hello world!"
+        username: '{{ main_domain.domain_admin.username }}@{{ main_domain.domain_name }}'
+        password: '{{ main_domain.domain_admin.password }}'
+        enabled: yes
+tags:
+  - T1053.002

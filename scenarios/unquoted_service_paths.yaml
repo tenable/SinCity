@@ -1,0 +1,12 @@
+hosts:
+  '{{ main_workstation.key }}':
+    copy_files:
+      SinCityLogger.exe: C:\Program Files
+    win_services:
+      SinCityLogger:
+        binpath: C:\Program Files\SinCityLogger.exe
+        description: Service that run under Domain Admin context
+        password: dkzs3f1A
+        username: basin.local\dwight.mccarthy
+tags:
+- T1574.009

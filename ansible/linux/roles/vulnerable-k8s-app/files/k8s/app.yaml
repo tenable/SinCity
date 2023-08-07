@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  labels:
+    app: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: syaish057/vulnerable-web:latest
+        ports:
+        - containerPort: 80
+        securityContext:
+          # By-design misconfiguration
+          allowPrivilegeEscalation: true
+          privileged: true
+          runAsNonRoot: false
+          capabilities:
+            add:
+              - CHOWN
+              - SYS_ADMIN
+              - SETUID
+              - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: app

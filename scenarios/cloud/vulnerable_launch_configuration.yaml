@@ -1,0 +1,7 @@
+cloud:
+  aws:
+    launch_configurations:
+      my_launch_configuration:
+        image_id: '{{ assets.providers.aws.ami[config.region].centos7 }}'
+        instance_type: t2.micro
+        user_data_base64: IyEvYmluL3NoCgplY2hvICJIZWxsbyB3b3JsZCEi

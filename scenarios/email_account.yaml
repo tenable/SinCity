@@ -1,0 +1,4 @@
+use_actions:
+  - domain_user_with_email
+tags:
+  - T1087.003

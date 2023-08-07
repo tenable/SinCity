@@ -1,0 +1,155 @@
+---
+based_on:
+  - base
+hosts:
+  web01-{{ assets.variables.main_sid }}:
+    ip: 10.0.100.30
+    type: linux
+    role: linux_web_server
+    subnet: internal
+    requirements:
+      - docker-compose
+    docker_compose_apps:
+      vulnerable_web_app:
+        url: '{{ assets.vulnerable_web_app.url }}'
+        target_path: '{{ assets.vulnerable_web_app.target_path }}'
+    instance_role: s3_read_role-{{ assets.variables.main_sid }}
+    identities:
+      - azure_identity
+    security_groups:
+      - web_security_group
+      - allow_ssh
+
+  web02-{{ assets.variables.main_sid }}:
+    ip: 10.0.100.31
+    type: linux
+    role: linux_web_server
+    subnet: internal
+    requirements:
+      - docker-compose
+    docker_compose_apps:
+      vulnerable_web_app:
+        url: '{{ assets.vulnerable_web_app.url }}'
+        target_path: '{{ assets.vulnerable_web_app.target_path }}'
+    instance_role: s3_read_role-{{ assets.variables.main_sid }}
+    identities:
+      - azure_identity
+    security_groups:
+      - web_security_group
+      - allow_ssh
+
+load_balancers:
+  alb01-{{ assets.variables.main_sid }}:
+    hosts:
+      - web01-{{ assets.variables.main_sid }}
+      - web02-{{ assets.variables.main_sid }}
+    protocol: http
+    forward_port: 80
+    host_port: 80
+    host_protocol: http
+    subnets:
+      - public
+      - public_2
+    security_groups:
+      - web_security_group
+
+subnets:
+  internal:
+    address: 10.0.100.0/24
+  public:
+    address: 10.0.110.0/24
+    availability_zone: '{{ config.region }}b'
+  public_2:
+    address: 10.0.111.0/24
+    availability_zone: '{{ config.region }}a'
+
+security_groups:
+  allow_ssh:
+    description: Allow SSH Access
+    inbound:
+      ssh:
+        protocol: tcp
+        start_port: 22
+        end_port: 22
+        access: allow
+        cidr_blocks:
+          - 0.0.0.0/0
+    outbound:
+      all:
+        protocol: -1
+        start_port: 0
+        end_port: 0
+        access: allow
+        cidr_blocks:
+          - 0.0.0.0/0
+
+  web_security_group:
+    description: Allow web access
+    inbound:
+      http:
+        protocol: tcp
+        start_port: 80
+        end_port: 80
+        access: allow
+        cidr_blocks:
+          - 0.0.0.0/0
+    outbound:
+      all:
+        protocol: -1
+        start_port: 0
+        end_port: 0
+        access: allow
+        cidr_blocks:
+          - 0.0.0.0/0
+
+policies:
+  access_s3_policy:
+    description: Gives access to S3 storage
+    allowed_actions:
+      - name: s3:*
+        resources:
+          - '${aws_s3_bucket.storagesincityblackhat.arn}'
+          - '${aws_s3_bucket.storagesincityblackhat.arn}/*'
+
+roles:
+  s3_read_role-{{ assets.variables.main_sid }}:
+    assume_role_policy:
+      allowed_actions:
+        - name: sts:AssumeRole
+          principal:
+            Service: 'ec2.amazonaws.com'
+    policies:
+      - access_s3_policy
+
+storage:
+  storagesincityblackhat:
+    access_type: private
+    files:
+      secret_file:
+        path: secrets/my_secret_file.txt
+        blob: This is my secret file
+
+groups:
+  s3_read-{{ assets.variables.main_sid }}:
+    policies:
+      - access_s3_policy
+
+users:
+  john_doe-{{ assets.variables.main_sid }}:
+    groups:
+      - s3_read-{{ assets.variables.main_sid }}
+
+
+rbac:
+  identities:
+    azure_identity: null
+
+  roles:
+    storage_read:
+      description: Read access to Azure Storage blobs
+      permissions:
+        actions:
+          - "Microsoft.Storage/storageAccounts/blobServices/containers/read"
+
+      assignable_scopes:
+        - azure_identity

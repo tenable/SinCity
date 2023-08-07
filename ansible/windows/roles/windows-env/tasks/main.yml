@@ -1,0 +1,12 @@
+---
+- name: Ensure environment variables
+  ansible.windows.win_environment:
+    state: '{{ env_vars.state | default("present") }}'
+    name: '{{ env_vars.name }}'
+    value: '{{ env_vars.value | default("") }}'
+    level: '{{ env_vars.level | default("machine") }}'
+    variables: '{{ env_Vars.variables | default(None) }}'
+  vars:
+    host: '{{ hosts[inventory_hostname] }}'
+    env_vars: '{{ host.env_vars }}'
+  when: host.env_vars is defined

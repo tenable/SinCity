@@ -1,0 +1,11 @@
+domains:
+  '{{ main_domain.key }}':
+    acls:
+      GenericAll_{{ main_user.key }}:
+        for: '{{ main_user.key }}'
+        inheritance: None
+        right: GenericAll
+        to: '{{ main_domain.key | to_ldap_path }}'
+tags:
+- T1003.006
+- T1558.001

@@ -1,0 +1,13 @@
+---
+- name: Ensure GPOs exist
+  ansible.windows.win_powershell:
+    script: |
+      # Create the GPO and link it to the target
+      New-GPO -Name {{ item.value.name }}
+      New-GPLink -Name "{{ item.value.name }}" -Target "{{ item.value.target }}" -LinkEnabled Yes
+
+      # Now give permissions to all of the provided entities
+      {% for key in item.value.permissions %}
+      Set-GPPermission -Name {{ item.value.name }} -TargetName "{{ key }}" -TargetType {{ item.value.permissions[key].type }} -PermissionLevel {{ item.value.permissions[key].level }} -Replace
+      {% endfor %}
+  with_dict: '{{ domain_info.gpos }}'

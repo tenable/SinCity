@@ -1,0 +1,12 @@
+---
+- name: Ensure that workstation is part of domain
+  ansible.windows.win_domain_membership:
+    dns_domain_name: '{{ domain_info.domain_name }}'
+    domain_admin_user: '{{ domain_info.domain_admin.username }}@{{ domain_info.domain_name }}'
+    domain_admin_password: '{{ domain_info.domain_admin.password }}'
+    state: domain
+  register: domain_state
+
+- name: Reboot if required
+  ansible.windows.win_reboot:
+  when: domain_state.reboot_required

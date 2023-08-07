@@ -1,0 +1,8 @@
+---
+collections:
+  # Install a collection from Ansible Galaxy.
+  - amazon.aws
+  - ansible.windows
+  - community.general
+  - community.windows
+  - kubernetes.core

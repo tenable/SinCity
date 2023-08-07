@@ -1,0 +1,7 @@
+cloud:
+  groups:
+    '{{ assets.providers.aws.iam.sincity_simple_group }}':
+  users:
+    '{{ assets.providers.aws.iam.sincity_simple_user }}':
+      groups:
+        - '{{ assets.providers.aws.iam.sincity_simple_group }}'

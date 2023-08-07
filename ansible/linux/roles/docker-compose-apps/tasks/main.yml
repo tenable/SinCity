@@ -1,0 +1,20 @@
+---
+- block:
+    - name: Clone repositories for docker-compose apps
+      git:
+        repo: '{{ item.value.url }}'
+        dest: '{{ item.value.target_path }}'
+      loop: '{{ host.docker_compose_apps | dict2items  }}'
+
+    - name: Start app
+      vars:
+        ansible_python_interpreter: python3
+      docker_compose:
+        project_src: '{{ item.value.target_path }}'
+      retries: 5
+      delay: 15
+      loop: '{{ host.docker_compose_apps | dict2items  }}'
+
+  vars:
+    host: '{{ network.hosts[inventory_hostname] }}'
+  when: host.docker_compose_apps is defined

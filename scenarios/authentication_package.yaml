@@ -1,0 +1,11 @@
+---
+hosts:
+  '{{ main_workstation.key }}':
+    registry_keys:
+      'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa':
+        name: Authentication Packages
+        data: 1
+        type: multistring
+
+tags:
+  - T1547.002

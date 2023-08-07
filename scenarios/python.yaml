@@ -1,0 +1,8 @@
+---
+hosts:
+  '{{ main_workstation.key }}':
+    software:
+      - python
+
+tags:
+  - T1059.006

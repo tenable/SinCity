@@ -1,0 +1,6 @@
+{
+    "full_name": "{{ some_vars.name }} Rosenfeld",
+    "some_property": {
+        "a": "hello world"
+    }
+}

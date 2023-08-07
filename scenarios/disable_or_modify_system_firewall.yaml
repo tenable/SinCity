@@ -1,0 +1,6 @@
+hosts:
+  '{{ main_workstation.key }}':
+    firewall: false
+
+tags:
+  - T1562.004

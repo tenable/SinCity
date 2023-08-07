@@ -1,0 +1,6 @@
+hosts:
+  '{{ main_workstation.key }}':
+    users:
+      jake_jill:
+        description: This is just a random user
+        password: dsa@d2#zs

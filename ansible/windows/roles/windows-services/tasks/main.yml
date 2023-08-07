@@ -1,0 +1,27 @@
+---
+- name: Create windows service
+  block:
+    - ansible.windows.win_service:
+        name: '{{ item.key }}'
+        path: '{{ item.value.binpath }}'
+        description: '{{ item.value.description }}'
+        username: '{{ item.value.username | default(None) }}'
+        password: '{{ item.value.password | default(None) }}'
+      loop: '{{ services|dict2items }}'
+      when:
+        - services is defined
+
+    # - ansible.windows.win_service:
+    #     name: '{{ item.key }}'
+    #     state: restarted
+    #     username: '{{ item.value.username | default(None) }}'
+    #     password: '{{ item.value.password | default(None) }}'
+    #   loop: '{{ services|dict2items }}'
+    #   when:
+    #     - item.value.username is defined
+    #     - item.value.password is defined
+
+  vars:
+    services: '{{hosts[inventory_hostname].win_services | default({})}}'
+    username: '{{ item.value.username | default("")}}'
+    password: '{{ item.value.password | default("")}}'

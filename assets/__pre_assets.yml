@@ -1,0 +1,8 @@
+variables:
+  keypair:
+    name: sincity_ssh_key
+    public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDA5X22wA0IhxDxqHN60t9MS13nfueYDR5S3x3/nMp/HDQbqjTAG22iNLESSMZueNHPW4Y+iUdZTdvaqlpXNyDhEKgEKbdauClw6nr3E1x9XMcn6y/ygi6Xp3Bv8MODco9i8rT6Tlfk2rWj31jakyFPyzjfr/ExZR+8p//bvsaHxwMuM/8LiZcosU/IDl/IJn2BTDQaFAqq0SQsuBJKILIAB9iXO4AIooK6MECAK8xbEu3oELP8lAxfhWesSrzgu8dtWzMgB2WggQDAgbHHbpZHyKfLwuAJAhJ6qM8ZsLtUzGVPMgeR3h+gl9lFiSoierqtl8SgOG2sQ0lyoeR5zYtk9nRaCgLYQQ7peJuTA0rG/KYUc5VloQ1Dw7zJJ6qbJiM0kQHHqTNNIYcG4oUElAnLk6Lx7VHCQHRk+CDHcv4UQ9SnRyz7jNxELFxcwpVcKa3UMFkjUlOMM6oCawv7TvzrI8RTmnHWf8q2vSc9kZGIKO4Dm1b0RpQd2FORUjHiipM=
+      sincity_lab_key
+
+      '
+  main_sid: research-blackhat

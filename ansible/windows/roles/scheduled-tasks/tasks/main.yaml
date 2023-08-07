@@ -1,0 +1,18 @@
+---
+- block:
+    - name: Ensure scheduled tasks exist
+      community.windows.win_scheduled_task:
+        name: '{{ item.key }}'
+        description: '{{ item.value.description }}'
+        actions: '{{ item.value.actions | default([]) }}'
+        triggers: '{{ item.value.triggers | default([]) }}'
+        username: '{{ item.value.username | default(None) }}'
+        password: '{{ item.value.password | default(None) }}'
+        state: present
+        enabled: '{{ item.value.enabled | default("yes") }}'
+      loop: '{{ scheduled_tasks|dict2items }}'
+
+  vars:
+    host: '{{ hosts[inventory_hostname] }}'
+    scheduled_tasks: '{{ host.scheduled_tasks }}'
+  when: host.scheduled_tasks is defined

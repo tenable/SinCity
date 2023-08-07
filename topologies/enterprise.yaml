@@ -1,0 +1,98 @@
+---
+based_on:
+  - base
+  - standard
+hosts:
+  adfs:
+    name: adfs
+    ip: 10.0.100.12
+    type: windows
+    role: adfs
+    domain: basin.local
+  web01:
+    ip: 10.0.50.31
+    name: web01
+    role: linux_web_server
+    subnet: dmz
+    type: linux
+    requirements:
+      - docker-compose
+    docker_compose_apps:
+      vulnerable_web_app:
+        url: '{{ assets.vulnerable_web_app.url }}'
+        target_path: '{{ assets.vulnerable_web_app.target_path }}'
+  mysql:
+    ip: 10.0.50.30
+    name: mysql
+    role: linux_server
+    subnet: dmz
+    type: linux
+    requirements:
+      - docker-compose
+    docker_containers:
+      mysql_db:
+        state: started
+        image: mysql:latest
+        ports:
+          - '3306:3306'
+        env:
+          MYSQL_ROOT_PASSWORD: root
+      adminer:
+        image: adminer
+        state: started
+        ports:
+          - '8080:8080'
+  dcdmz:
+    name: dcdmz
+    ip: 10.0.50.11
+    type: windows
+    role: dc
+    subnet: dmz
+    domain: dmz.local
+  azureadconnect:
+    name: azureadconnect
+    ip: 10.0.50.12
+    type: windows
+    role: winserver
+    subnet: dmz
+
+subnets:
+  dmz:
+    address: 10.0.50.0/24
+    dc: 10.0.50.11
+dcs_map:
+  dcdmz: dmz.local
+domains:
+  basin.local:
+    trusts:
+      dmz.local:
+        direction: Outbound
+  dmz.local:
+    netbios_name: dmz
+    domain_name: dmz.local
+    safe_mode_password: Aa123456!
+    domain_admin:
+      username: Administrator
+      password: da!sz$Sz
+    domain_users:
+      goldie.goldenson:
+        firstname: goldie
+        surname: goldenson
+        password: g0ld!3G0ld3ns0n
+        city: Basin
+        description: Goldie is a prostitute and Marv's love interest, who is murdered early on in the story, sparks Marv's quest for revenge
+        path: OU=Users,OU=dmz,DC=dmz,DC=local
+      spiral.staircase:
+        firstname: spiral
+        surname: staircase
+        password: sp!r@lSt@!rc@s3
+        city: Basin
+        description: The Spiral Staircase is a brothel in Old Town, run by the Old Town Girls and frequented by many of the story's characters
+        path: OU=Users,OU=dmz,DC=dmz,DC=local
+    ous:
+      dmz:
+        path: DC=dmz,DC=local
+      Users:
+        path: OU=dmz,DC=dmz,DC=local
+      Groups:
+        path: OU=dmz,DC=dmz,DC=local

@@ -1,0 +1,33 @@
+---
+- block:
+    - name: Ensure directory exists for process to copy
+      ansible.windows.win_file:
+        path: '{{ sincity_dir }}'
+        state: directory
+
+    - name: Copy files required to run process
+      ansible.windows.win_copy:
+        src: '{{ item.key }}'
+        dest: '{{ sincity_dir }}'
+        force: yes
+      loop: '{{ processes|dict2items }}'
+
+    - name: Start process
+      ansible.windows.win_shell: '{{ run_cmd }}'
+      vars:
+        run_cmd: '{{ item.value.command | default(sincity_dir + "\\" + item.key) }}'
+        ansible_become_password: '{{ runas.password | default(None) }}'
+        runas: '{{ item.runas | default({}) }}'
+        process_cwd: '{{ item.cwd | default(sincity_dir) }}'
+      args:
+        chdir: '{{ process_cwd }}'
+      become_method: runas
+      become: '{{ item.runas is defined }}'
+      become_user: '{{ runas.username | default(None) }}'
+      loop: '{{ processes|dict2items }}'
+
+  vars:
+    sincity_dir: 'c:\sincity'
+    host: '{{ hosts[inventory_hostname] }}'
+    processes: '{{ host.process_runner }}'
+  when: host.process_runner is defined

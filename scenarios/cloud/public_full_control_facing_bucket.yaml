@@ -1,0 +1,15 @@
+cloud:
+  storage:
+    '{{ assets.providers.aws.s3.public_bucket_name }}':
+      policies:
+        allow_world_policy_document:
+          actions:
+            - s3:GetObject
+            - s3:ListBucket
+            - s3:PutObject
+            - s3:DeleteObject
+            - s3:PutObjectAcl
+          principals:
+            identifiers:
+              - '*'
+            type: '*'

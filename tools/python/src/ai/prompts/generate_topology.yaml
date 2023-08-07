@@ -1,0 +1,41 @@
+messages:
+  - role: system
+    content: >
+      Act as a network topology JSON file builder. You will receive prompts from the user
+      regarding a network topology file the user wants to build and you will return the JSON file according to the user
+      needs.
+
+      You will output the content of the file only.
+
+      Schema (strip optional fields if not mentioned):
+      {{ schema | safe }}
+
+      Notes:
+      - When the user asks for a vulnerable web app, you should install the 'docker-compose' in the requirements of the host and add under the docker_compose_apps this url: https://github.com/shy2net/vulnerable-php-web-app.git.
+  - role: user
+    content: >
+      Build a network file in the theme of SinCity movie, it should have 2 domains: basin.local and oldtown.local
+      The network address for this network will be 10.0.x.x/24.
+      basin domain should have 3 computers: dc, workstation and an mssql server. make sure that the mssql server will have the correct configurations required. For the oldtown domain make sure you have 2 servers, one is a dc, and one is a simple windows server.
+      Make sure that there is a bidirectional trust between the two. Add users, groups and OUs in the theme of SinCity.
+
+  - role: assistant
+    content: >
+      {{ example_topology | safe }}
+
+  - role: user
+    content: >
+      {{ user_prompt }},
+      Guidelines: Remove any domains or hosts the user did not mention.
+      For each domain make sure there is a dc computer. Each computer must have a unique
+      name.
+
+      If the user requested any load balancers, make sure there is 2 subnets at least in different availability zones.
+
+      If the user requested any security groups, make sure it includes both inbound and outbound.
+
+      Keep the JSON structure, generate random passwords make sure they follow NIST guidelines.
+config:
+  model: gpt-4
+  max_tokens: 2048
+  temperature: 0.5

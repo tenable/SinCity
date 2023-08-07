@@ -1,0 +1,12 @@
+---
+- name: Set permissions to specific directory\registry
+  ansible.windows.win_acl:
+      user: '{{ item.value.username }}'
+      path: '{{ item.value.path }}'
+      type: '{{ item.value.type }}'
+      rights: '{{ item.value.rights }}'
+  vars:
+    host: '{{ hosts[inventory_hostname] }}'
+    acls: '{{ host.win_acls | default({}) }}'
+  loop: '{{ acls|dict2items }}'
+  when: host.win_acls is defined

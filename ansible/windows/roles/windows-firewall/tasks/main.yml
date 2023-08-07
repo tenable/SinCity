@@ -1,0 +1,12 @@
+- name: Enable firewall for Domain, Public and Private profiles
+  community.windows.win_firewall:
+    state: "{{ 'enabled' if firewall_state == 'true' else 'disabled'}}"
+    profiles:
+    - Domain
+    - Private
+    - Public
+  tags: enable_firewall
+  vars:
+    host: '{{ hosts[inventory_hostname] }}'
+    firewall_state: '{{host.firewall | default("false")}}'
+    when: host.firewall

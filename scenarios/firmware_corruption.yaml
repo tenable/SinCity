@@ -1,0 +1,9 @@
+hosts:
+  '{{ main_workstation.key }}':
+    registry_keys:
+      'HKLM:\Software\Windows\CurrentVersion\WINEVT\Channe ls\Microsoft-Windows-BitLocker/BitLocker-Operational':
+        name: Enabled
+        data: 0
+        type: dword
+tags:
+  - T1495

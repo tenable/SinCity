@@ -1,0 +1,3 @@
+---
+# vars file for playbooks/roles/vulnerable-k8s-app
+app_path: ~/apps/vulnerable-k8s-app

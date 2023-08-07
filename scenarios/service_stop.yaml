@@ -1,0 +1,5 @@
+use_actions:
+  - create_local_admin
+
+tags:
+  - T1489

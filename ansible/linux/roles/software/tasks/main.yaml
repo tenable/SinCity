@@ -1,0 +1,13 @@
+---
+  - name: Ensure software is installed
+    yum:
+      name: '{{ item }}'
+      state: present
+    with_items: '{{ software }}'
+    ignore_errors: yes
+    become: yes
+    vars:
+      host: '{{ network.hosts[inventory_hostname] }}'
+      software: '{{ host.software }}'
+    when: host.software is defined
+    tags: software

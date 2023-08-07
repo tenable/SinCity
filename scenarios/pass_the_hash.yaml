@@ -1,0 +1,4 @@
+use_actions:
+  - local_admins_with_same_password
+tags:
+  - T1550.002

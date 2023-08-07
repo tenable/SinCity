@@ -1,0 +1,230 @@
+---
+based_on:
+  - base
+hosts:
+  dc01:
+    variable: main_dc
+    name: dc01
+    ip: 10.0.100.11
+    type: windows
+    role: dc
+    domain: basin.local
+  ws01:
+    variable: main_workstation
+    name: ws01
+    ip: 10.0.100.30
+    type: windows
+    role: workstation
+    domain: basin.local
+  mssql:
+    variable: main_database
+    name: mssql
+    ip: 10.0.100.21
+    type: windows
+    role: mssql
+    domain: basin.local
+    services:
+      mssql:
+        sa_password: dm45S@31%W
+        svcaccount: sql_svc
+        sysadmins:
+          - basin\\marv.mackie
+        executeaslogin:
+          basin\\marv.mackie: sa
+        executeasuser:
+          basin\\marv.mackie: dbo
+        linked_servers:
+          basin.local:
+            users_mapping:
+              - local_login: local_computer\jon.snow
+                remote_login: sa
+                remote_password: sa_P@ssw0rd!Ess0s
+  dc02:
+    name: dc02
+    ip: 10.0.110.11
+    type: windows
+    role: dc
+    domain: oldtown.local
+  winserver02:
+    name: winserver02
+    ip: 10.0.110.21
+    type: windows
+    role: winserver
+    domain: oldtown.local
+  dc03:
+    name: dc03
+    ip: 10.0.120.11
+    type: windows
+    role: dc
+    domain: sacredoaks.local
+  winserver01:
+    name: winserver01
+    ip: 10.0.120.21
+    type: windows
+    role: winserver
+    domain: sacredoaks.local
+
+subnets:
+  basin:
+    address: 10.0.100.0/24
+    dc: 10.0.100.11
+  oldtown:
+    address: 10.0.120.0/24
+    dc: 10.0.120.11
+  sacredoaks:
+    address: 10.0.110.0/24
+    dc: 10.0.110.11
+dcs_map:
+  dc01: basin.local
+  dc02: oldtown.local
+  dc03: sacredoaks.local
+domains:
+  basin.local:
+    variable: main_domain
+    netbios_name: basin
+    domain_name: basin.local
+    safe_mode_password: Aa123456!
+    trusts:
+      oldtown.local:
+        direction: Bidirectional
+      sacredoaks.local:
+        direction: Bidirectional
+    domain_admin:
+      username: Administrator
+      password: d#rfkn7dZ!
+    domain_users:
+      marv.mackie:
+        variable: main_domain_admin_user
+        firstname: marv
+        surname: mackie
+        password: iL0v3SinCity
+        city: Basin
+        description: Marv is a tough and ruthless criminal who seeks revenge for the murder of Goldie
+        groups:
+          - Domain Admins
+          - Revenge Seekers
+          - Criminals
+        path: OU=Users,OU=basin,DC=basin,DC=local
+      john.hartigan:
+        variable: main_user
+        firstname: john
+        surname: hartigan
+        password: h@rt1g@nR0ck5
+        city: Basin
+        description: John is a retired police officer who goes on a mission to save a young girl from a powerful senator's son
+        groups:
+          - Retired Police Officers
+        path: OU=Users,OU=basin,DC=basin,DC=local
+      dwight.mcdermott:
+        variable: sec_user
+        firstname: dwight
+        surname: mcdermott
+        password: dw!ghtM@cD3rm0tt
+        city: Basin
+        description: Dwight is a hired hitman who falls in love with Gail, a member of the all-female crime syndicate known as the Old Town Girls
+        groups:
+          - Old Town Girls
+        path: OU=Users,OU=basin,DC=basin,DC=local
+      sql_svc:
+        firstname: sql
+        surname: service
+        password: P@ssw0rd
+        city: '-'
+        description: sql service
+        groups:
+          - Service Accounts
+        path: OU=Users,OU=basin,DC=basin,DC=local
+        spns:
+          - MSSQLSvc/mssql.basin.local:1433
+          - MSSQLSvc/mssql.basin.local
+    domain_groups:
+      global: {}
+      universal: {}
+      domainlocal:
+        Service Accounts:
+          path: OU=Groups,OU=basin,DC=basin,DC=local
+        Revenge Seekers:
+          variable: main_users_group
+          path: OU=Groups,OU=basin,DC=basin,DC=local
+        Criminals:
+          path: OU=Groups,OU=basin,DC=basin,DC=local
+        Retired Police Officers:
+          path: OU=Groups,OU=basin,DC=basin,DC=local
+        Old Town Girls:
+          path: OU=Groups,OU=basin,DC=basin,DC=local
+    ous:
+      basin:
+        path: DC=basin,DC=local
+      Users:
+        path: OU=basin,DC=basin,DC=local
+      Groups:
+        path: OU=basin,DC=basin,DC=local
+    gpos: {}
+  oldtown.local:
+    netbios_name: oldtown
+    domain_name: oldtown.local
+    safe_mode_password: Aa123456!
+    domain_admin:
+      username: Administrator
+      password: ny%3d!+s
+    domain_users:
+      nancy.callahan:
+        firstname: nancy
+        surname: callahan
+        password: n@ncyC@ll@h@n
+        city: Basin
+        description: Nancy is a stripper and former prostitute who seeks revenge for the death of her protector and love interest, Hartigan
+        groups:
+          - Revenge Seekers
+        path: CN=Users,DC=oldtown,DC=local
+      gail.mcdermott:
+        firstname: gail
+        surname: mcdermott
+        password: g@!lMcD3rm0tt
+        city: Basin
+        description: Gail is a leader of the Old Town Girls, an all-female crime syndicate that controls the city's prostitution and drug trade
+        groups:
+          - Old Town Girls
+        path: CN=Users,DC=oldtown,DC=local
+    domain_groups:
+      global: {}
+      universal: {}
+      domainlocal:
+        Revenge Seekers:
+          path: OU=Groups,OU=oldtown,DC=oldtown,DC=local
+        Old Town Girls:
+          path: OU=Groups,OU=oldtown,DC=oldtown,DC=local
+    ous:
+      oldtown:
+        path: DC=oldtown,DC=local
+      Groups:
+        path: OU=oldtown,DC=oldtown,DC=local
+  sacredoaks.local:
+    netbios_name: sacredoaks
+    domain_name: sacredoaks.local
+    safe_mode_password: Aa123456!
+    domain_admin:
+      username: Administrator
+      password: mz@s*6d.z
+    domain_users:
+      roark.junior:
+        firstname: roark
+        surname: junior
+        password: r0@rkJUn!0r
+        city: Basin
+        description: Roark Junior is a powerful senator's son and the main antagonist of the story, known for his sadistic tendencies and involvement in child prostitution
+        path: OU=Users,OU=sacredoaks,DC=sacredoaks,DC=local
+      lucille.mackie:
+        firstname: lucille
+        surname: mackie
+        password: luc!ll3M@ck!3
+        city: Basin
+        description: Lucille is Marv's mother and a strong influence in his life, despite her alcoholism and abusive behavior
+        path: OU=Users,OU=sacredoaks,DC=sacredoaks,DC=local
+    ous:
+      sacredoaks:
+        path: DC=sacredoaks,DC=local
+      Users:
+        path: OU=sacredoaks,DC=sacredoaks,DC=local
+      Groups:
+        path: OU=sacredoaks,DC=sacredoaks,DC=local

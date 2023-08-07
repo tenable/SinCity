@@ -1,0 +1,19 @@
+hosts:
+  '{{ main_workstation.key }}':
+    scheduled_tasks:
+      echo_hello:
+        description: Say hello!
+        actions:
+          - path: cmd.exe
+            arguments: /c "echo hello world!"
+        username: '{{ main_domain.domain_admin.username }}@{{ main_domain.domain_name }}'
+        password: '{{ main_domain.domain_admin.password }}'
+        enabled: yes
+
+    registry_keys:
+      'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa':
+        name: scheduled_task_force_authenticated_account
+        data: 1
+        type: dword
+tags:
+  - T1053.005

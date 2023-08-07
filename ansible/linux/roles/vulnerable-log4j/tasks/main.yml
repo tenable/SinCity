@@ -1,0 +1,20 @@
+---
+# tasks file for playbooks/roles/vulnerable-web-app
+- name: Clone repository
+  git:
+    repo: https://github.com/christophetd/log4shell-vulnerable-app.git
+    dest: '{{ app_path }}'
+
+
+- name: Copy docker compose file
+  ansible.builtin.copy:
+    src: docker-compose.yml
+    dest: '{{ app_path }}'
+
+- name: Start app
+  vars:
+    ansible_python_interpreter: python3
+  docker_compose:
+    project_src: '{{ app_path }}'
+  retries: 5
+  delay: 15

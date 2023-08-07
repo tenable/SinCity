@@ -1,0 +1,107 @@
+---
+based_on:
+- base
+hosts:
+  dc01:
+    variable: main_dc
+    name: dc01
+    ip: 10.0.100.11
+    type: windows
+    role: dc
+    domain: sinville.local
+  ws01:
+    variable: main_workstation
+    name: ws01
+    ip: 10.0.100.30
+    type: windows
+    role: workstation
+    domain: sinville.local
+    users: {}
+  mssql:
+    variable: main_database
+    name: mssql
+    ip: 10.0.100.21
+    type: windows
+    role: mssql
+    domain: sinville.local
+    services:
+      mssql:
+        sa_password: dm45S@31%W
+        svcaccount: sql_svc
+        sysadmins:
+        - sinville\dwight.mccarthy
+        executeaslogin:
+          sinville\dwight.mccarthy: sa
+        executeasuser:
+          sinville\dwight.mccarthy: dbo
+subnets:
+  sinville:
+    address: 10.0.100.0/24
+    dc: 10.0.100.11
+dcs_map:
+  dc01: sinville.local
+domains:
+  sinville.local:
+    variable: main_domain
+    netbios_name: sinville
+    domain_name: sinville.local
+    safe_mode_password: Aa123456!
+    domain_admin:
+      username: Administrator
+      password: d#rfkn7dZ!
+    domain_users:
+      dwight.mccarthy:
+        variable: main_domain_admin_user
+        firstname: dwight
+        surname: mccarthy
+        password: dkzs3f1A
+        city: "-"
+        description: Dwight McCarthy
+        groups:
+        - Domain Admins
+        path: CN=Builtin,DC=sinville,DC=local
+      nancy.callahan:
+        variable: main_user
+        firstname: nancy
+        surname: callahan
+        password: compl$3d23$#dsa4
+        city: "-"
+        description: Nancy Callahan
+        groups:
+        - Girls of Old Town
+        path: CN=Builtin,DC=sinville,DC=local
+      miho:
+        variable: sec_user
+        firstname: miho
+        surname: "-"
+        password: f%4da@1szd
+        city: "-"
+        description: Miho
+        groups:
+        - Girls of Old Town
+        path: CN=Builtin,DC=sinville,DC=local
+      sql_svc:
+        firstname: sql
+        surname: service
+        password: P@ssw0rd
+        city: "-"
+        description: sql service
+        groups:
+        - Service Accounts
+        path: CN=Users,DC=sinville,DC=local
+        spns:
+        - MSSQLSvc/mssql.sinville.local:1433
+        - MSSQLSvc/mssql.sinville.local
+    domain_groups:
+      global: {}
+      universal: {}
+      domainlocal:
+        Service Accounts:
+          path: OU=Groups,DC=sinville,DC=local
+        Girls of Old Town:
+          variable: main_users_group
+          path: OU=Groups,DC=sinville,DC=local
+    ous:
+      Groups:
+        path: DC=sinville,DC=local
+    gpos: {}

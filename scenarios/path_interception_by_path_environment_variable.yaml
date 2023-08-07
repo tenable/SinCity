@@ -1,0 +1,8 @@
+hosts:
+  '{{ main_workstation.key }}':
+    env_vars:
+      name: PATH
+      value: "c:\\users"
+
+tags:
+  - T1574.007

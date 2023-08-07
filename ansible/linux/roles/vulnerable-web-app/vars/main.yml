@@ -1,0 +1,3 @@
+---
+# vars file for playbooks/roles/vulnerable-web-app
+app_path: ~/apps/vulnerable-web-app

@@ -1,0 +1,15 @@
+---
+- import_playbook: network_data.yml
+  tags: always
+
+- hosts: all
+  tasks:
+    - name: Install Nessus
+      ansible.windows.win_powershell:
+        script: |
+          wget https://www.tenable.com/downloads/api/v1/public/pages/nessus/downloads/16864/download?i_agree_to_tenable_license_agreement=true  -OutFile nessus.msi
+          msiexec /i nessus.msi NESSUS_SERVER="{{nessus_server}}:443" NESSUS_KEY={{nessus_key}}  /qn
+          cmd /c '"c:\Program Files\Tenable\Nessus\nessuscli.exe" managed link --key={{nessus_key}} --host={{nessus_server}} --port=443'
+      vars:
+        nessus_key: '{{ network.extras.nessus.key }}'
+        nessus_server: '{{ network.extras.nessus.server }}'

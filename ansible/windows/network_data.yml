@@ -1,0 +1,11 @@
+---
+- name: Read network.json file
+  hosts: all
+  connection: local
+  vars_files:
+    - '../../network.json'
+
+  tasks:
+    - name: Save 'network.json' data into a variable as fact
+      set_fact:
+        network: '{{ network }}'

@@ -1,0 +1,11 @@
+---
+domains:
+  "{{ main_domain.key }}":
+    acls:
+      Give_Network_LogonScript_from_{{ main_user.key }}_to_{{ sec_user.key }}:
+        for: '{{ main_user.key }}'
+        to: '{{ sec_user.key }}'
+        right: Ext-Edit-Script-Path
+        inheritance: Descendents
+tags:
+  - T1037.003

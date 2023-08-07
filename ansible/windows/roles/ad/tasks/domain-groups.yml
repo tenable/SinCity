@@ -1,0 +1,24 @@
+---
+- name: Create domain local groups
+  win_domain_group:
+    name: '{{ item.key }}'
+    scope: domainlocal
+    path: '{{item.value.path}}'
+    state: present
+  with_dict: "{{ domain_info.domain_groups['domainlocal'] | default({}) }}"
+
+- name: Create global groups
+  win_domain_group:
+    name: '{{ item.key }}'
+    scope: global
+    path: '{{item.value.path}}'
+    state: present
+  with_dict: "{{ domain_info.domain_groups['global'] | default({}) }}"
+
+- name: Create global groups
+  win_domain_group:
+    name: '{{ item.key }}'
+    scope: universal
+    path: '{{item.value.path}}'
+    state: present
+  with_dict: "{{ domain_info.domain_groups['universal'] | default({}) }}"

@@ -1,0 +1,8 @@
+domains:
+  '{{ main_domain.key }}':
+    domain_users:
+      '{{ main_user.key }}':
+        groups:
+        - Remote Desktop Users
+tags:
+- T1021.001

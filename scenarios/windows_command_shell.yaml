@@ -1,0 +1,10 @@
+hosts:
+  '{{ main_workstation.key }}':
+    registry_keys:
+      'HKLM:\Software\Policies\Microsoft\Windows\System':
+        name: DisableCMD
+        data: 1
+        type: dword
+
+tags:
+  - T1059.003

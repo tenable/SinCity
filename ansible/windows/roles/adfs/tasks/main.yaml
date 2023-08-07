@@ -1,0 +1,116 @@
+---
+# This is the main playbook for the ldaps-setup role
+
+- name: Ensure ADFS Installed
+  ansible.windows.win_powershell:
+    script: |
+      $federationRole = Get-WindowsFeature Adfs-Federation
+      if ($federationRole.Installed -eq $false) {
+      # Install ADFS feature
+      Install-WindowsFeature Adfs-Federation -IncludeManagementTools
+      $Ansible.Changed = $true
+      }
+      else {
+      $Ansible.Changed = $false
+      }
+  become: yes
+  become_method: runas
+  become_user: '{{ domain_info.domain_admin.username }}@{{ domain_info.domain_name }}'
+  register: adfs_feature_result
+  vars:
+    ansible_become_pass: '{{ domain_info.domain_admin.password }}'
+
+- name: Ensure ADFS Postinstall
+  ansible.windows.win_powershell:
+    script: |
+      [CmdletBinding()]
+      param (
+          [String]
+          $DomainName,
+
+          [String]
+          $CertificateSubject,
+
+          [String]
+          $DisplayName,
+
+          [String]
+          $ADFSServiceAccountName,
+
+          [String]
+          $DomainUsername,
+
+          [String]
+          $DomainPassword
+      )
+
+      # Install Remote tools for active directory
+      Install-WindowsFeature RSAT-AD-PowerShell
+
+      Import-Module ADFS
+
+      # Create a self-signed SSL certificate
+      $Certificate = New-SelfSignedCertificate -Subject $CertificateSubject `
+        -CertStoreLocation cert:\localmachine\my `
+        -KeyExportPolicy Exportable
+      $Thumbprint = $Certificate.Thumbprint
+
+      # Export the certificate to a file
+      Export-Certificate -Cert $Certificate -FilePath c:\certificate.cer
+
+      # Import the certificate into the "root" store
+      Import-Certificate -FilePath c:\certificate.cer -CertStoreLocation cert:\localmachine\root
+
+      $SecurePassword = ConvertTo-SecureString $DomainPassword -AsPlainText -Force
+      $Credentials = New-Object System.Management.Automation.PSCredential($DomainUsername, $SecurePassword)
+
+      # Create the ADFS farm with default settings
+      Install-ADFSFarm -CertificateThumbprint $Thumbprint `
+        -FederationServiceDisplayName $DisplayName `
+        -FederationServiceName $CertificateSubject `
+        -ServiceAccountCredential $Credentials `
+        -OverwriteConfiguration
+
+      # Allowing creating the service account immediately
+      Add-KdsRootKey -EffectiveTime ((get-date).addhours(-10))
+
+      # Add the relying party trust
+      $MetadataUrl = "https://" + $CertificateSubject + "/FederationMetadata/2007-06/FederationMetadata.xml"
+      Add-ADFSRelyingPartyTrust -Name $CertificateSubject -MetadataURL $MetadataUrl
+
+      # Enable the signon page
+      Set-AdfsProperties -EnableIdPInitiatedSignonPage $true
+      $Ansible.Changed = $true
+
+      # Create the ADFS service account
+      # New-ADServiceAccount -Name $ADFSServiceAccountName `
+      #   -DNSHostName ($ADFSServiceAccountName + "." + $DomainName) `
+      #  -PrincipalsAllowedToRetrieveManagedPassword "Domain Admins"
+
+      # Use WID Database
+      # Install-ADDSForest -CreateADAccount:$false
+
+      # Set the ADFS service account
+      # Set-ADFSProperties -ServiceAccountName $ADFSServiceAccountName
+    error_action: stop
+    parameters:
+      DomainName: '{{ domain_info.domain_name }}'
+      CertificateSubject: '{{ inventory_hostname }}.{{ domain_info.domain_name }}'
+      DisplayName: Authentication Server
+      ADFSServiceAccountName: adfs_gmsa
+      DomainUsername: '{{domain_info.domain_name}}\{{ domain_info.domain_admin.username }}'
+      DomainPassword: '{{ domain_info.domain_admin.password }}'
+  when: adfs_feature_result.changed
+  register: result
+  become: yes
+  become_method: runas
+  become_user: '{{ domain_info.domain_admin.username }}@{{ domain_info.domain_name }}'
+  vars:
+    domain_info: '{{ network.domains[network.hosts[inventory_hostname].domain] }}'
+    ansible_become_pass: '{{ domain_info.domain_admin.password }}'
+
+- name: Restart ADFS Server
+  win_reboot:
+    reboot_timeout: 900
+    post_reboot_delay: 100
+  when: result.changed

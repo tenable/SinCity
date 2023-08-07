@@ -1,0 +1,46 @@
+---
+- name: Create all users
+  win_domain_user:
+    name: '{{ item.key }}'
+    firstname: '{{item.value.firstname | default("") }}'
+    surname: '{{ item.value.surname | default("") }}'
+    password: '{{ item.value.password }}'
+    password_never_expires: yes
+    state: present
+    path: '{{item.value.path}}'
+    description: '{{item.value.description | default("")}}'
+    groups: '{{ item.value.groups | default([])}}'
+    city: '{{item.value.city | default("")}}'
+    email: '{{ item.value.email | default("-") }}'
+    domain_username: '{{domain_info.domain_admin.username}}'
+    domain_password: '{{domain_info.domain_admin.password}}'
+
+  with_dict: '{{ domain_info.domain_users }}'
+
+
+- name: Ensure users for SPN
+  ansible.windows.win_powershell:
+    script: |
+      {% for spn in item.value.spns %}
+      setspn -S {{ spn }} {{domain_info.domain_name}}\{{ item.key }}
+      {% endfor %}
+  with_dict: '{{ domain_info.domain_users }}'
+  when: item.value.spns is defined
+
+- name: Ensure users that does not required pre-auth are set
+  ansible.windows.win_powershell:
+    script: |
+      Get-ADUser -Identity "{{ item.key }}" | Set-ADAccountControl -DoesNotRequirePreAuth:${{ item.value.notRequiresPreAuth }}
+  with_dict: '{{ domain_info.domain_users }}'
+  when: item.value.notRequiresPreAuth is defined
+
+# FIXME: This is not working, this is why we are using powershell instead
+# - name: Ensure users for SPN
+#   win_domain_user:
+#     name: "{{ item.key }}"
+#     spn: "{{item.value.spns}}"
+#     domain_username: '{{domain_info.domain_admin.username}}'
+#     domain_password: '{{domain_info.domain_admin.password}}'
+#   with_dict: '{{ domain_info.domain_users }}'
+#   when: item.value.spns is defined
+

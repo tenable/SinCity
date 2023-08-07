@@ -1,0 +1,50 @@
+---
+- name: Install common deps
+  hosts: all
+  roles:
+    - install-common-deps
+  tags: linux-common-deps
+
+- import_playbook: network_data.yml
+  tags: always
+
+- name: Ensure all software is installed
+  hosts: all
+  roles:
+    - software
+  tags: software
+
+- name: Ensure dynamic host requirements are installed
+  hosts: all
+  tasks:
+    - include_role:
+        name: '{{ item }}'
+      loop: '{{ network.hosts[inventory_hostname].requirements | default([]) }}'
+  tags: linux-requirements
+
+- name: Ensure docker containers are running
+  hosts: all
+  roles:
+    - docker-apps
+    - docker-compose-apps
+  tags: docker-apps
+
+# - name: Setup vulnerable webapp
+#   hosts: web01
+#   roles:
+#     - docker-compose
+#     - vulnerable-web-app
+
+# - name: Setup minikube
+#   hosts: k8s
+#   tags: k8s
+#   roles:
+#     - docker-compose
+#     - minikube
+
+# - name: Setup vulnerable log4shell server
+#   hosts: log4shell
+#   tags: log4shell
+#   roles:
+#     - docker-compose
+#     - vulnerable-log4j

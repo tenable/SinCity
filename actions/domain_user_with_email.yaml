@@ -1,0 +1,5 @@
+domains:
+  '{{ main_domain.key }}':
+    domain_users:
+      '{{ main_user.key }}':
+        email: harry.potter@hogwarts.com

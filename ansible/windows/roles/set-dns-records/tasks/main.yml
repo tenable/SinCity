@@ -1,0 +1,5 @@
+---
+- name: Setup the DC as additional DNS server
+  ansible.windows.win_dns_client:
+    adapter_name: Ethernet
+    dns_servers: '{{ dns_records }}'

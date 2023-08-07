@@ -1,0 +1,16 @@
+---
+- name: Ensures {{ app_path }} dir exists
+  file: path={{ app_path }} state=directory
+
+- name: Copy k8s directory
+  copy:
+    src: k8s
+    dest: '{{ app_path }}'
+    force: true
+
+# TODO: Replace with k8s ansible plugin
+- name: Start k8s
+  shell: |
+
+    cd {{ app_path }}
+    kubectl apply -f .

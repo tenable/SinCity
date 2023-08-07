@@ -1,0 +1,18 @@
+domains:
+  '{{ main_domain.key }}':
+    domain_groups:
+      domainlocal:
+        Dummy Group:
+          path: OU=Groups,{{ main_domain.key | to_ldap_path }}
+    domain_users:
+      dummy.user:
+        city: '-'
+        description: Dummy User
+        firstname: dummy
+        groups:
+        - Dummy Group
+        password: vd*2s12#
+        path: CN=Builtin,DC=basin,DC=local
+        surname: user
+tags:
+- T1069.002

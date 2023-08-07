@@ -1,0 +1,4 @@
+use_actions:
+ - create_local_user
+tags:
+  - T1027.005

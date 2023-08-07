@@ -1,0 +1,113 @@
+---
+# - name: Join workstations into domains
+#   hosts: workstation_servers
+#   roles:
+#     - member-of-domain
+#   vars:
+#     domain_info: '{{ network.domains[network.hosts[inventory_hostname].domain] }}'
+- import_playbook: network_data.yml
+  tags: always
+
+- name: Ensure local user accounts exists
+  hosts: all
+  tags: local-users
+  roles:
+    - local-users
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure local groups and users are attached to it
+  hosts: all
+  tags: local-groups
+  roles:
+    - local-groups
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure files state
+  hosts: all
+  tags: files
+  roles:
+    - files
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Copy files
+  hosts: all
+  tags: copy-files
+  roles:
+    - copy-files
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure Windows Services running
+  hosts: all
+  tags: windows-services
+  roles:
+    - windows-services
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure Windows firewall state
+  hosts: all
+  tags: windows-firewall
+  roles:
+    - windows-firewall
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure processes specificed are running on hosts
+  hosts: all
+  tags: process-runner
+  roles:
+    - process-runner
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure scheduled tasks exist
+  hosts: all
+  tags: scheduled-tasks
+  roles:
+    - scheduled-tasks
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure registry keys are set
+  hosts: all
+  tags: registry
+  roles:
+    - registry
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure ACLs are set correctly on each host
+  hosts: all
+  tags: windows-acl
+  roles:
+    - windows-acl
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure Windows Shares exist
+  hosts: all
+  tags: windows-shares
+  roles:
+    - windows-shares
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure Environment variables
+  hosts: all
+  tags: windows-env-vars
+  roles:
+    - windows-env
+  vars:
+    hosts: '{{ network.hosts }}'
+
+- name: Ensure all software is installed
+  hosts: all
+  tags: windows-software
+  roles:
+    - software
+  vars:
+    hosts: '{{ network.hosts }}'

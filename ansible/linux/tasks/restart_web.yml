@@ -1,0 +1,9 @@
+# restart_web.yml
+---
+- name: Restart web service
+  shell: |
+    cd {{ cymptom_dir }}
+    docker-compose stop web
+    docker-compose up -d web
+  become: yes
+  become_user: cymptom

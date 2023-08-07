@@ -1,0 +1,13 @@
+hosts:
+  '{{ main_workstation.key }}':
+    groups:
+      Local Administrators:
+        members:
+          - jordan_pete
+      Administrators:
+        members:
+          - Administrators
+    users:
+      jordan_pete:
+        description: This is a user for Account Access Removal
+        password: zs@dkf13@

@@ -1,0 +1,9 @@
+---
+- name: Read network.json file
+  hosts: all
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Load network.json data into a variable
+      set_fact:
+        network: "{{ (lookup('file', '../../network.json') | from_json).network }}"

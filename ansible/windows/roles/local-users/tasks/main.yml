@@ -1,0 +1,19 @@
+---
+- name: Create local users
+  ansible.windows.win_user:
+    name: '{{ item.key }}'
+    password: '{{ item.value.password }}'
+    description: '{{ item.value.description if "description" in item.value else None }}'
+  vars:
+    users: '{{hosts[inventory_hostname].users | default({})}}'
+  loop: '{{ users|dict2items }}'
+  when: users is defined
+
+  # ansible.windows.win_user:
+  #   with_items: '{{ hosts }}'
+  #   when: item.users is defined
+  #   name: '{{ item.key }}'
+  #   password: '{{ item.value.password }}'
+  #   state: present
+  #   groups:
+  #     - Users

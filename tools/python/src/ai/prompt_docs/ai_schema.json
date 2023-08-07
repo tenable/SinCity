@@ -1,0 +1,183 @@
+{
+  "based_on": ["An array of topologies this topology is based on, by default only 'base'"],
+  "hosts": {
+    "hostName": {
+      "variable": "A friendly variable name for the host (for example: main_server), can contain only alphabet and underscore",
+      "variable_group": "same as variable but used to indicate a group of servers that are associated",
+      "name": "Hostname of the machine",
+      "ip": "IP address of the machine",
+      "type": "Operating System of the machine (e.g., windows, linux)",
+      "role": "The role of the machine, must be one of the following: dc,mssql,workstation,winserver,adfs,linux_web_server,linux_server",
+      "domain": "The domain the machine belongs to (e.g., basin.local), optional - only if the machine is part of a domain",
+      "subnet": "the subnet this machine is part of (must be a name of one of the subnets)",
+      "services(optional)": {
+        "serviceName": "A key\\value JSON of a service specific configurations"
+      },
+      "requirements(optional)": [
+        "An array of software\\services to install on this host (e.g. docker-compose)"
+      ],
+      "docker_compose_apps(optional)": {
+        "appName": {
+          "url": "a git repository url to clone",
+          "target_path": "The target path to clone (e.g ~/apps/myapp)"
+        }
+      },
+      "variable(optional)": "A variable name to be later used to access this asset",
+      "instance_role(optional)": "the role name (AWS/Azure roles that appears under the roles field) this instance is attach to",
+      "security_groups(optional)": [
+        "an array of security group names (appear in the security_groups field) this instance is attached to, leave blank if not mentioned by the user"
+      ],
+      "users(optional, local users on Windows computer)": {
+        "username": {
+          "description": "A short description about the user",
+          "password": "A password for this local user"
+        }
+      },
+      "groups(optional, local groups on Windows computer)": {
+        "groupName": {
+          "members": ["An array of local users by their name from the local users on this computer"]
+        }
+      },
+      "registry_keys(optional, windows only)": {
+        "registryKeyPath": {
+          "name": "the name of the registry key",
+          "data": "the value of this key",
+          "type": "the type of the registry key (e.g dword)"
+        }
+      },
+      "copy_files(optional, files to copy to the target machine)": {
+        "sourceFilePath(e.g, c:\\my_file.exe": "the destination target for the file"
+      },
+      "win_services(optional, list of windows services to copy and run)": {
+        "serviceName": {
+          "binpath": "The location the service binary stored (e.g c:\\my_file.exe)",
+          "description": "A short description about this service",
+          "username(optional)": "the username to run this service as",
+          "password(optional)": "the password to associated with the user we run as"
+        }
+      },
+      "software(optional)": [
+        "an array of software to install (for example: git), if host type is windows they are installed using chocolatey, on linux using yum"
+      ]
+    }
+  },
+  "subnets": {
+    "subnetName": {
+      "address": "Subnet IP address and CIDR (e.g., 10.0.100.0/24)",
+      "dc": "ip address of the Domain Controller (e.g., 10.0.100.11), optional - only if there is a domain controller",
+      "availability_zone(optional)": "The availability zone (e.g us-west-1a, use {{ config.region }} to get the region ,for example us-east-1)"
+    }
+  },
+  "dcs_map": {
+    "dcHostname": "The domain that the domain controller belongs to (e.g., basin.local)"
+  },
+  "domains": {
+    "domainName": {
+      "variable": "A friendly name for the domain",
+      "netbios_name": "NetBIOS name for the domain",
+      "domain_name": "Full domain name (e.g., basin.local)",
+      "safe_mode_password": "Safe mode password for domain",
+      "trusts(optional)": {
+        "trustedDomainName": {
+          "direction": "Trust relationship direction (e.g., Bidirectional, Inbound, Outbound)"
+        }
+      },
+      "domain_admin": {
+        "username": "Domain administrator username",
+        "password": "Domain administrator password"
+      },
+      "domain_users": {
+        "username": {
+          "firstname": "",
+          "surname": "",
+          "password": "",
+          "city": "",
+          "description": "",
+          "groups": ["An array of groups this user is part of"],
+          "path": "LDAP path the user is under"
+        }
+      },
+      "domain_groups": {
+        "Group scope (e.g., global, universal, domainlocal)": {
+          "groupname": {
+            "path": "LDAP path for the group"
+          }
+        }
+      },
+      "ous": {
+        "organizationalUnitName)": {
+          "path": "LDAP path for the Organizational Unit"
+        }
+      }
+    }
+  },
+  "policies(optional, an AWS/Azure policies": {
+    "policyName": {
+      "description": "A short description about the policy",
+      "allowed_actions": [
+        {
+          "name": "the actual action (such as s3:* to allow access to all s3)",
+          "resources": ["An array of resources that are allowed for this action, ('*' for all resources)"]
+        }
+      ]
+    }
+  },
+  "storage(optional, an AWS/Azure storage such as S3": {
+    "storageName": {
+      "files": {
+        "fileName(should consist of alphabet and underscores only)": {
+          "blob": "optional, A blob text to write into the file",
+          "path": "The path where the file will be copied to on the storage (e.g /my_pictures/group_photo.jpg)",
+          "source": "optional, if no blob provided the source path to copy the file from (e.g /tmp/file.zip)"
+        }
+      }
+    }
+  },
+  "security_groups(optional, an AWS/Azure security groups)": {
+    "securityGroupName": {
+      "description": "a short description about this security group",
+      "inbound(allow or denies traffic into the resource)": {
+        "ruleName": {
+          "protocol": "e.g tcp/udp or -1 for both",
+          "start_port": "the start port to allow/deny this rule",
+          "end_port": "the end port to allow/deny this rule",
+          "access": "allows or denies the ports above",
+          "cidr_blocks": ["An array of network addresses (e.g 0.0.0.0/0 for allow or deny from all"]
+        }
+      },
+      "outbound(allow or denies traffic out of the resource)": "the same as inbound, except for outgoing traffic"
+    }
+  },
+  "load_balancers(optional, an AWS/Azure load balancer)": {
+    "loadbalancerName(only alphanumeric characters and hyphens allowed)": {
+      "hosts": ["An array of host names (must appear in the hosts) that are behind this load balancer"],
+      "protocol": "The protocol this load balancer uses (e.g HTTP/HTTPS)",
+      "forward_port": "The port this load balancer is exposing/forwarding/listening on",
+      "host_port": "The port the hosts are listening and should be forward into the load balancer",
+      "host_protocol": "Same as the protocol, except running on the hosts",
+      "subnets": [
+        "An array of subnet names (must appear in the subnets field) this load balancer is attached to, it must be 2 different subnets on different availability zones - in their availability_zone put {{ config.region }}a and {{ config.region }}b respectively"
+      ],
+      "security_groups": ["optional, an array of security group names (must appear in the security_groups)"]
+    }
+  },
+  "roles(optional, an AWS/Azure roles such as IAM role that can be attached to resources": {
+    "roleName": {
+      "allowed_actions": {
+        "name": "the action of the role (such as sts:AssumeRole)",
+        "principal": "An object that represents the principal of this role"
+      },
+      "policies": ["An array of polices names to apply to this role"]
+    }
+  },
+  "groups(optional an AWS/Azure groups to create": {
+    "groupName": {
+      "policies": ["An array of policy names to apply to this group"]
+    }
+  },
+  "users(optional, an AWS/Azure users to create)": {
+    "username": {
+      "groups": ["An array of groups this user is part of"]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+---
+- name: Ensure docker containers are running
+  community.docker.docker_container: '{{ dict({ "name": item.key },**item.value) }}'
+  vars:
+    host: '{{ network.hosts[inventory_hostname] }}'
+  loop: '{{ host.docker_containers | dict2items }}'
+  when: host.docker_containers is defined

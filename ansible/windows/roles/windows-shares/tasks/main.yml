@@ -1,0 +1,15 @@
+---
+- name: Ensure windows shares exist
+  ansible.windows.win_share:
+    name: '{{ item.key }}'
+    description: '{{ item.value.description | default("") }}'
+    path: '{{ item.value.path }}'
+    list: '{{ True if (item.value.list | default("true")) == "true" else False }}'
+    full: '{{ item.value.full_access | default(None) }}'
+    read: '{{ item.value.read_access | default(None) }}'
+    deny: '{{ item.value.deny_access | default(None) }}'
+  vars:
+    host: '{{ hosts[inventory_hostname] }}'
+    shares: '{{ host.win_shares | default({}) }}'
+  loop: '{{ shares | dict2items }}'
+  when: host.win_shares is defined

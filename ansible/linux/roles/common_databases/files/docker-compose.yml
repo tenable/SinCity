@@ -1,0 +1,82 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'aA{5~HF'
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./shared:/shared
+
+    ports:
+      - '3306:3306'
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server
+    restart: always
+    user: root
+    ports:
+      - 1433:1433
+    volumes:
+      - ./data/mssql/data:/var/opt/mssql/data
+      - ./data/mssql/logs:/var/opt/mssql/log
+      - ./shared:/shared
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: 'xdv~JsG9='
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 'oM889!*'
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./shared:/shared
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  # phpmyadmin:
+  #   image: phpmyadmin
+  #   restart: always
+  #   depends_on:
+  #     - mysql
+  #   environment:
+  #     PMA_HOST: mysql
+  #     PMA_PORT: 3306
+  #     PMA_ARBITRARY: 1
+
+  #   ports:
+  #     - '8085:80'
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 1sS39fMax
+    volumes:
+      - ./data/mongo:/data/db
+      - ./shared:/shared
+    ports:
+      - '27017:27017'
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 1sS39fMax
+      ME_CONFIG_MONGODB_URL: mongodb://root:1sS39fMax@mongo:27017/

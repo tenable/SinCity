@@ -1,0 +1,7 @@
+hosts:
+  '{{ main_workstation.key }}':
+    users:
+      locally:
+        password: Aa123456
+tags:
+- T1003.002

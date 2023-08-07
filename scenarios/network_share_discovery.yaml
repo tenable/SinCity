@@ -1,0 +1,9 @@
+hosts:
+  '{{ main_workstation.key }}':
+    win_shares:
+      users_share:
+        full_access: '{{ main_user.key }}'
+        list: 'true'
+        path: C:\Users
+tags:
+- T1135

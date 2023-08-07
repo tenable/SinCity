@@ -1,0 +1,20 @@
+hosts:
+  '{{ main_workstation.key }}':
+    files:
+      'C:\Service':
+        state: directory
+    copy_files:
+      SinCityLogger.exe: C:\Services
+    win_services:
+      SinCityWeakServiceLogger:
+        binpath: C:\Services\SinCityLogger.exe
+        description: A simple service that the user has access to
+
+    win_acls:
+      simple_user_access_to_service:
+        path: C:\Services
+        rights: FullControl
+        type: allow
+        username: '{{ main_user.key }}'
+tags:
+- T1574.010

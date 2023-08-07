@@ -1,0 +1,10 @@
+hosts:
+# {% for item in groups.web_server %}
+  '{{ item.key }}':
+    requirements:
+      - docker-compose
+    docker_compose_apps:
+      vulnerable_web_app:
+        url: '{{ assets.vulnerable_web_app.url }}'
+        target_path: '{{ assets.vulnerable_web_app.target_path }}'
+# {% endfor %}

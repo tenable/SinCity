@@ -1,0 +1,4 @@
+use_actions:
+  - create_local_group_and_user
+tags:
+  - T1069.001

@@ -1,0 +1,36 @@
+---
+- import_playbook: network_data.yml
+  tags: always
+
+- name: Setup domain controllers
+  hosts: dc_servers
+  roles:
+    - domain_controller
+  tags: dc
+  vars:
+    domain_info: '{{ network.domains[network.dcs_map[inventory_hostname]] }}'
+
+# TODO: Fix this as it does create users but return errors
+- name: Setup active directory
+  hosts: dc_servers
+  roles:
+    - ad
+  tags: ad-setup
+  vars:
+    domain_info: '{{ network.domains[network.dcs_map[inventory_hostname]] }}'
+
+- name: Setup LDAPS on domains
+  hosts: dc_servers
+  roles:
+    - ldaps
+  tags: ad-ldaps
+  vars:
+    domain_info: '{{ network.domains[network.dcs_map[inventory_hostname]] }}'
+
+- name: Setup active directory ACLs
+  hosts: dc_servers
+  roles:
+    - acl
+  tags: ad-acls
+  vars:
+    domain_info: '{{ network.domains[network.dcs_map[inventory_hostname]] }}'

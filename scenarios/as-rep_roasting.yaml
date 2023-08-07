@@ -1,0 +1,7 @@
+domains:
+  '{{ main_domain.key }}':
+    domain_users:
+      '{{ main_user.key }}':
+        notRequiresPreAuth: 'true'
+tags:
+- T1558.004

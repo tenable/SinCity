@@ -1,0 +1,12 @@
+hosts:
+  '{{ main_workstation.key }}':
+    groups:
+      Administrators:
+        members:
+        - george_marvik
+    users:
+      george_marvik:
+        description: This is a user for SMB\Windows Admin Shares
+        password: d5s2$f%sx
+tags:
+- T1021.002

@@ -1,0 +1,8 @@
+---
+- import_playbook: network_data.yml
+  tags: always
+
+- name: Setup domain trusts
+  hosts: dc_servers
+  roles:
+    - domain-trust

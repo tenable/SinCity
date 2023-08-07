@@ -1,0 +1,10 @@
+---
+- import_playbook: network_data.yml
+  tags: always
+
+- name: Setup ADFS Server
+  hosts: adfs_servers
+  roles:
+    - adfs
+  vars:
+    domain_info: '{{ network.domains[network.hosts[inventory_hostname].domain] }}'
