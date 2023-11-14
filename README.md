@@ -1,6 +1,6 @@
 # Introduction
 
-**Visit the official docs in order to understand how to work with SinCity. Read them at the [official SinCity docs website](http://sincity.tenboneresearch.com).**
+**Visit the official docs in order to understand how to work with SinCity. Read them at the [official SinCity docs website](http://sincity-wiki.s3-website-us-west-2.amazonaws.com/).**
 
 Welcome to the official SinCity IaC open source project 🎉!
 SinCity is still under alpha stages, so there could be major changes to the utility.
